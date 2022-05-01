@@ -3,90 +3,6 @@
 #include <iostream>
 #define PRINTOUT 0
 
-// static std::queue<bfs_node> q;
-// static std::vector<bool> visited;
-// pthread_mutex_t q_lock;
-// void (*action)(bfs_node);
-// static adjacencyList G;
-// static int threads_working;
-// static int N;
-
-
-// static void* bfs_pt_while_global(void* arg){
-//     bool working = true;
-//     while(1){
-//         //wait if queue is empty and threads wroking< total
-//         pthread_mutex_lock(&q_lock);
-//         if(q.empty()){
-//             if(working){
-//                 working=false;
-//                 threads_working--;
-//             }
-//             if(threads_working>0){
-//                 //wait
-//                 // std::cout<<*threads_working<<std::endl;
-//                 pthread_mutex_unlock(&q_lock);
-//                 while(q.empty()&&threads_working>0);
-//             }
-//             else{
-//                 //exit
-//                 pthread_mutex_unlock(&q_lock);
-//                 return 0;
-//             }
-//         }
-//         else{
-//             //continue
-//             if(!working){
-//                 working=true;
-//                 threads_working++;
-//             }
-//             //atomic
-//             bfs_node node = q.front();
-//             q.pop();
-//             pthread_mutex_unlock(&q_lock);
-//             ///endatomic
-//             if(action!=NULL)
-//                 action(node);
-            
-//             for(auto i = G[node].begin();i!=G[node].end();i++){
-//                 bfs_node neighbor = *i;
-//                 //atomic
-//                 pthread_mutex_lock(&q_lock);
-//                 if(visited[neighbor]==false){
-//                     q.push(neighbor);
-//                     visited[neighbor]=true;
-                    
-//                 }
-//                 pthread_mutex_unlock(&q_lock);
-//                 //endatomic
-//             }
-//         }
-//     }
-// }
-// void bfs_pt_global(const adjacencyList &g, bfs_node origin,void (*act)(bfs_node),int NUM_THREADS){
-//     G=g;
-//     N=G.size();
-//     q=std::queue<bfs_node>();
-//     visited=std::vector<bool>(N,false);
-//     threads_working=NUM_THREADS;
-//     pthread_mutex_init(&q_lock,NULL);
-//     //atomic
-//     pthread_mutex_lock(&q_lock);
-//     q.push(origin);
-//     visited[origin]=true;
-//     pthread_mutex_unlock(&q_lock);
-//     //endatomic
-//     action=act;
-//     G=g;
-
-//     pthread_t threads[NUM_THREADS];
-//     for(int i=0;i<NUM_THREADS;i++){
-//         pthread_create(&threads[i], NULL, bfs_pt_while_global,NULL);
-//     }
-//     for(int i=0;i<NUM_THREADS;i++){
-//         pthread_join(threads[i], NULL);
-//     }
-// }
 
 typedef struct {
     const adjacencyList* G;//global graph, read only
@@ -132,15 +48,9 @@ static void* bfs_pt_while(void* arg){
                 bfs_node node = TB->threadqueue->front();
                 // std::cout<<node<<std::endl;
                 TB->threadqueue->pop();
-                //perform action on node
+                
                 /*if(!pthread_mutex_trylock(&TB->node_locks->at(node)))*/{
-
-                    if(action!=NULL &&!TB->done->at(node)){
-                        action(node);
-                    }
-                    TB->done->at(node)=true;
-                
-                
+                                
                     //check neighbors
                     for(int i = 0;i<TB->G->at(node).size();i++){
                         bfs_node neighbor = TB->G->at(node).at(i);
@@ -164,6 +74,11 @@ static void* bfs_pt_while(void* arg){
                         }
                         
                     }
+                    //perform action on node
+                    if(action!=NULL &&!TB->done->at(node)){
+                        action(node);
+                    }
+                    TB->done->at(node)=true;
                 }
 
             }
