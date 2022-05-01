@@ -1,2 +1,2 @@
 # CudaFirstSearch
-Paralellizing BFS using CUDA + MPI
+Paralellizing BFS + MPI
