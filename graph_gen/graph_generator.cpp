@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <fstream>
 //directed
 adjacencyList generate_graph_list(int nodes,int min_neighbors,int max_neighbors,int seed){
     unsigned long neighbor_range=max_neighbors-min_neighbors;
@@ -75,7 +76,7 @@ void print_graph(std::vector<std::vector<bool>> g){
 }
 adjacencyList generate_graph_list_from_text(){
     
-    node n,m;
+    bfs_node n,m;
 
     // # of verticies is a 2^n
     // # of edges is |V| * m
@@ -83,9 +84,28 @@ adjacencyList generate_graph_list_from_text(){
 
     adjacencyList graph(n,alist(0));
 
-    for(node i =0 ; i < m ; i++){
-        node a,b;
+    for(bfs_node i =0 ; i < m ; i++){
+        bfs_node a,b;
         std::cin >> a >> b;
+        graph[a].push_back(b);
+    }
+    return graph;
+}
+adjacencyList generate_graph_list_from_textfile(std::string textfile){
+    std::ifstream filestream;
+    filestream.open(textfile);
+
+    bfs_node n,m;
+
+    // # of verticies is a 2^n
+    // # of edges is |V| * m
+    filestream >> n >> m; // expects kroncker's graph 
+
+    adjacencyList graph(n,alist(0));
+
+    for(bfs_node i =0 ; i < m ; i++){
+        bfs_node a,b;
+        filestream >> a >> b;
         graph[a].push_back(b);
     }
     return graph;
