@@ -1,5 +1,4 @@
 #include "serial_bfs.h"
-#include "../timer/timer.cpp"
 #include <math.h>
 
 using namespace std;
