@@ -6,17 +6,17 @@
 #include <string>
 #include <fstream>
 //directed
-adjacencyList generate_graph_list(int nodes,int min_neighbors,int max_neighbors,int seed){
+adjacencyList generate_graph_list(unsigned long nodes,unsigned long min_neighbors,unsigned long max_neighbors,int seed){
     unsigned long neighbor_range=max_neighbors-min_neighbors;
     assert(neighbor_range>0);
     srand(seed);
     adjacencyList graph(nodes,alist());
     for(unsigned long i=0;i<nodes;i++)
     {
-        int nneighbors = rand()%neighbor_range+min_neighbors;
+        unsigned long nneighbors = rand()%neighbor_range+min_neighbors;
         std::vector<bool> neighbors(nodes,false);
-        for(int j=0;j<nneighbors;j++){
-            int neighbor=rand()%nodes;
+        for(unsigned long j=0;j<nneighbors;j++){
+            bfs_node neighbor=rand()%nodes;
             while(neighbor==i || neighbors[neighbor])
                 neighbor=rand()%nodes;
             neighbors[neighbor]=true;
@@ -26,15 +26,15 @@ adjacencyList generate_graph_list(int nodes,int min_neighbors,int max_neighbors,
     return graph;
 }
 
-std::vector<std::vector<bool> > generate_graph_matrix(int nodes,int min_neighbors,int max_neighbors,int seed){
-    int neighbor_range=max_neighbors-min_neighbors;
+std::vector<std::vector<bool> > generate_graph_matrix(unsigned long nodes,unsigned long min_neighbors,unsigned long max_neighbors,int seed){
+    bfs_node neighbor_range=max_neighbors-min_neighbors;
     assert(neighbor_range>0);
     srand(seed);
     std::vector<std::vector<bool> > graph(nodes,std::vector<bool>(nodes,false));
-    for(int i=0;i<nodes;i++)
+    for(unsigned long i=0;i<nodes;i++)
     {
         unsigned long long nneighbors = rand()%neighbor_range+min_neighbors;
-        for(int j=0;j<nneighbors;j++){
+        for(unsigned long j=0;j<nneighbors;j++){
             bfs_node neighbor=rand()%nodes;
             while(neighbor==i || graph[i][neighbor])
                 neighbor=rand()%nodes;
@@ -46,10 +46,10 @@ std::vector<std::vector<bool> > generate_graph_matrix(int nodes,int min_neighbor
 
 void print_graph(adjacencyList g){
     std::stringstream ss;
-    long long m=0;
-    long long n = g.size();
+    unsigned long long m=0;
+    unsigned long long n = g.size();
     // std::cout<<"n="<<n<<std::endl;
-    for(int i=0;i<n;i++){
+    for(unsigned long i=0;i<n;i++){
         ss<<i<<": ";
         for(auto j=g[i].begin();j!=g[i].end();j++){
             ss<<*j<<",";
@@ -62,10 +62,10 @@ void print_graph(adjacencyList g){
 }
 void print_graph(std::vector<std::vector<bool>> g){
     std::stringstream ss;
-    int m=0;
-    int n = g.size();
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
+    unsigned long m=0;
+    unsigned long n = g.size();
+    for(unsigned long i=0;i<n;i++){
+        for(unsigned long j=0;j<n;j++){
             ss<<g[i][j]<<" ";
             m+=g[i][j];
         }
