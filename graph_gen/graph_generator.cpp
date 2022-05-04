@@ -33,9 +33,9 @@ std::vector<std::vector<bool> > generate_graph_matrix(int nodes,int min_neighbor
     std::vector<std::vector<bool> > graph(nodes,std::vector<bool>(nodes,false));
     for(int i=0;i<nodes;i++)
     {
-        int nneighbors = rand()%neighbor_range+min_neighbors;
+        unsigned long long nneighbors = rand()%neighbor_range+min_neighbors;
         for(int j=0;j<nneighbors;j++){
-            int neighbor=rand()%nodes;
+            bfs_node neighbor=rand()%nodes;
             while(neighbor==i || graph[i][neighbor])
                 neighbor=rand()%nodes;
             graph[i][neighbor]=true;
