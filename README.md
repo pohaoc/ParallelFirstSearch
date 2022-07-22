@@ -1,4 +1,3 @@
 # ParallelFirstSearch
-Paralellizing BFS + MPI
-
+Paralellizing BFS 
 * Carlton Knox & Howie Chen
